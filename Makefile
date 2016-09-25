@@ -1,17 +1,14 @@
-# reference: http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
-CC     = gcc
-CFLAGS = -I.
-DEPS   =          # *.h files go here
-OBJ    = master.o # *.o files go here
-
-%.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
-
-master: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS)
-
-debug: *.c
-	$(CC) -g $^
-
+all: master slave
+master: master.c
+	gcc -o master master.c
+slave: slave.c
+	gcc -o slave slave.c
 clean:
-	rm -f *.o master
+	rm -f *.o
+cleanall:
+	rm -f *.o master slave
+checkin:
+	git add *
+	git commit -m "$m"
+	git push origin master
+

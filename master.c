@@ -47,9 +47,4 @@ int main(int argc, char *argv[])
 				return -2;
 		}
 	};
-
-	printf("max_slaves:    %d\n", max_slaves);
-	printf("filename:      %s\n", filename);
-	printf("num_increment: %d\n", num_increment);
-	printf("kill_time:     %d\n", kill_time);
 }
