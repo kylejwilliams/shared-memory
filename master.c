@@ -2,6 +2,43 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <string.h>
+#include <wait.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+
+/* create n slave processes */
+void spawnSlaves(int n)
+{
+	int i;
+	pid_t pids[n];
+	char arg[20];
+
+	for (i = 0; i < n; i++)
+	{
+		if ((pids[i] = fork()) < 0)
+		{
+			perror("fork error");
+			abort();
+		}
+		else if (pids[i] == 0)
+		{
+			snprintf(arg, sizeof(arg), "%d", i);
+			execl("./slave", "slave", arg, NULL);
+			exit(0);
+		}
+	}
+
+	int status;
+	pid_t pid;
+	while (n > 0)
+	{
+		pid = wait(&status);
+		printf("Child with PID %ld has died :(\n", (long)pid, status);
+		--n;
+	}
+}
 
 int main(int argc, char *argv[])
 {
@@ -12,6 +49,7 @@ int main(int argc, char *argv[])
 	char       *filename         = "test.out";                             /* log file for output */
 	int        num_increment     = 3;                                      /* how many times a slave should increment the value before terminating */
 	int        kill_time         = 20;                                     /* amount of seconds before master will terminate itself */
+	
 
 	/* process cmd args */
 	while ((opt = getopt_long(argc, argv, short_opt, long_opt, NULL)) != -1)
@@ -47,4 +85,8 @@ int main(int argc, char *argv[])
 				return -2;
 		}
 	};
+
+	spawnSlaves(max_slaves);
+	return 0;
 }
+

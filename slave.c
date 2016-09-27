@@ -26,7 +26,10 @@ int main(int argc, char *argv[])
 	else
 	{
 		process_num = atoi(argv[1]);
-		printf("process number: %d\n", process_num);
+		printf("Child - %d: I am going to sleep for 3 seconds...\n", process_num);
+		sleep(3);
+	    printf("Child - %d: I have woken up! I'll just go ahead and die now...\n", process_num);
+		
 		return 1;
 	}
 
