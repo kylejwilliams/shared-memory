@@ -10,21 +10,30 @@ the program takes 5 command line arguments as follows:
 	-h, --help		displays a help message
 	-s [x]			maximum number of slave processes (default: 5)
 	-l [filename]	the log file to use (default: test.out)
-	-i [y]			how many times each slave process should increment the shared variable
+	-i [y]			how many times each slave process should increment the 
+						shared variable
 	-t [z]			the time in seconds when the master will terminate itself
 
-After execution, a file with the given name will be placed in the executable's directory.
-This file will contain the output of each child process after writing to shared memory in the following format:
-'File modified by process number [process number] at time [current time, in hh:mm:ss] with shared number [number's value]'
+After execution, a file with the given name will be placed in the executable's 
+directory. This file will contain the output of each child process after 
+writing to shared memory in the following format:
+'File modified by process number [process number] at time [current time, in 
+hh:mm:ss] with shared number [number's value]'
 
 IMPORTANT:
 ----------
--- Signal handling has not been implemented. I attempted to make a signal handler that could kill the master process,
-	but in order for that to cascade down and kill all of the children I needed their PIDs, but I couldn't get them because 
-	they are local to the SpawnSlave(..) function. So then I tried making the array of slave PIDs global, but this wasn't 
-	possible because the array has a user-defined size. So then I tried to make it dynamic, but I kept getting segmentation 
-	faults. I eventually just gave up trying to get it to work since the project is already 24+ hours late...
--- The process does not end at the user-specified time. This is for the reasons listed above. If I let the process run itself
-	until completion it will work correctly, but if I try and kill it manually there is allocated shared memory left behind
-	because the children continue using it and don't clear it themselves and I can't signal the children to do it because I 
-	don't have their PIDs
+-- Signal handling has not been implemented. I attempted to make a signal 
+	handler that could kill the master process, but in order for that to 
+	cascade down and kill all of the children I needed their PIDs, but I 
+	couldn't get them because they are local to the SpawnSlave(..) 
+	function. So then I tried making the array of slave PIDs global, but this 
+	wasn't possible because the array has a user-defined size. So then I tried
+	to make it dynamic, but I kept getting segmentation faults. I eventually 
+	just gave up trying to get it to work since the project is already 24+ 
+	hours late.
+-- The process does not end at the user-specified time. This is for the reasons 
+	listed above. If I let the process run itself until completion it will work
+	correctly, but if I try and kill it manually there is allocated shared 
+	memory left behind because the children continue using it and don't clear 
+	it themselves and I can't signal the children to do it because I don't 
+	have their PIDs
